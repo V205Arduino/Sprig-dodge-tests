@@ -1,6 +1,65 @@
 /*
-@title: dodge_the_fireball
-@author: sam liu
+@title: sprig_dodging
+@author: sam liu and lucas
+
+Instructions:
+
+Welcome to Sprig!!!
+
+Hit "run" to execute the code and
+start the game (you can also press shift+enter).
+
+To complete each step you'll have to edit the code.
+
+The code for this game starts below this comment.
+
+This code has intentional errors.
+
+Made based on this workshop https://workshops.hackclub.com/sprig_dodge/
+
+The goal is to dodge the fireballs.
+
+Click the "open help" to discover your toolkit.
+
+--------
+Step 1
+--------
+
+Add the player to the map
+
+--------
+Step 2
+--------
+
+Add controls for moving the player to right, use "d" as input
+
+--------
+Step 3
+--------
+
+Fix the code!
+This cause this error:
+Uncaught TypeError: Cannot read properties of undefined (reading 'length') on line ... in column 33. Open the browser console for more information.
+
+Tip:
+the getAll() and getFirst() functions are a bit strange, aren't they?
+
+--------
+Step 4
+--------
+
+Add all functions in the gameLoop interval
+
+Tip: use spawnObstacle(), moveObstacles(), despawnObstacles(), and checkHit()
+
+--------
+END
+--------
+
+Modify the game to make it your own! Try:
+ - adding two players
+ - adding powerups
+ - come up with your own mechanic!
 */
 
 const player = "p";
@@ -40,9 +99,10 @@ setLegend(
 .......0........
 .......0........
 ......0.0.......
-.....0...0......`]
+.....0...0......`],
 )
 
+// Step 1 - Add player to map
 setMap(map`
 ........
 ........
@@ -51,9 +111,12 @@ setMap(map`
 ........
 ........
 ........
-...p....`)
+........`, player)
 
+// Create a variable that shows when the game is running
 var gameRunning = true; 
+
+// START - PLAYER MOVEMENT CONTROLS
 
 onInput("a", () => {
   if (gameRunning) {
@@ -61,18 +124,24 @@ onInput("a", () => {
   }
 });
 
+// Step 2 - Add move right controls
+
 onInput("d", () => {
   if (gameRunning) {
     getFirst(player).x += 1;
   }
 });
 
+// END - PLAYER MOVEMENT CONTROLS
+
+// Put obstacle in a random position
 function spawnObstacle() {
   let x = Math.floor(Math.random() * 8);
   let y = 0; 
   addSprite(x, y, obstacle);
 }
 
+// Make obstacles move
 function moveObstacles() {
   let obstacles = getAll(obstacle);
 
@@ -81,19 +150,22 @@ function moveObstacles() {
   }
 }
 
+// Make obstacles disappear
 function despawnObstacles() {
   let obstacles = getAll(obstacle);
 
   for (let i = 0; i < obstacles.length; i++) {
-   if (obstacles[i].y == 7) {
+   if (obstacles[i].y == 8) {
      obstacles[i].remove();
    }
   }
 }
 
+// See if the player was hit
 function checkHit() {
-  let obstacles = getAll(obstacle);
-  let p = getFirst(player);
+  // Step 3 - Fix code
+  let obstacles = getFirst(obstacle);
+  let p = getAll(player);
 
   for (let i = 0; i < obstacles.length; i++) {
     if (obstacles[i].x == p.x && obstacles[i].y == p.y) {
@@ -103,10 +175,9 @@ function checkHit() {
 
   return false;
 }
+
 var gameLoop = setInterval(() => {
-  despawnObstacles();
-  moveObstacles();
-  spawnObstacle();
+  // Step 4 - Add all game functions
 
   if (checkHit()) {
     clearInterval(gameLoop);
@@ -119,4 +190,3 @@ var gameLoop = setInterval(() => {
   }
 
 }, 1000);
-
